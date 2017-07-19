@@ -44,7 +44,7 @@ export default class TaskList extends Component {
         this._updateList();
     }
 
-    async _updateTasks () {
+    async _persistTasks () {
         await AsyncStorage.setItem('listOfTasks', 
             JSON.stringify(this.state.listOfTasks));
     }
@@ -76,7 +76,20 @@ export default class TaskList extends Component {
             listOfTasks
         });
 
-        this._updateTasks();
+        this._persistTasks();
+    }
+
+    _updateTask(taskData) {
+        let listOfTasks = this.state.listOfTasks.map((task) => {
+            if(task.key === taskData.key) task = taskData;
+            return task
+        });
+
+        this.setState({ 
+            listOfTasks
+        });
+
+        this._persistTasks();        
     }
 
     _editTask (id) {
@@ -84,7 +97,9 @@ export default class TaskList extends Component {
             return task.key === id;
         });
 
-        this.props.navigation.navigate('Edit', { task });
+        this.props.navigation.navigate('Edit', { task, updateTaskCallback: (taskData) => {
+            this._updateTask(taskData)
+        } });
     }
 
     _renderRowData (rowData) { 
