@@ -110,6 +110,7 @@ export default class TaskList extends Component {
                 onPress={ (id) => this._completeTask(id) }
                 text={ rowData.text }
                 onLongPress={ (id) => this._editTask(id) }
+                extraData={this.state}
             />
         ) 
     }
